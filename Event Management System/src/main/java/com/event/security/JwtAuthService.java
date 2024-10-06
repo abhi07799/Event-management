@@ -43,13 +43,13 @@ public class JwtAuthService
 	
 	
 	//to extract claims or information from the payload
-	//this method is created to extract all the information such as subject, issuedAt or expiration etc from the token we generated
+	//this method is created to extract all the information such as subject, issuedAt or expiration etc. from the token we generated
 	private Claims extractAllClaims(String token)
 	{
 		return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
 	}
 	
-	//created to to extract a specific property or information from the token
+	//created to extract a specific property or information from the token
 	private <T> T extractClaim(String token, Function<Claims, T> resolver)
 	{
 		Claims claim = extractAllClaims(token);
@@ -68,13 +68,8 @@ public class JwtAuthService
 	public boolean isValid(String token, UserDetails user)
 	{
 		String username = extractUsername(token);
-		if(username.equals(user.getUsername()) && !isTokenExpired(token))
-		{
-			return true;
-		}		
-		
-		return false;
-	}
+        return username.equals(user.getUsername()) && !isTokenExpired(token);
+    }
 
 	//to check whether token is expired or not
 	private boolean isTokenExpired(String token) {

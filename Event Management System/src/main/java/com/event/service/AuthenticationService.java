@@ -1,5 +1,6 @@
 package com.event.service;
 
+import com.event.exception.NoResourceAvailableException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,7 +53,7 @@ public class AuthenticationService
 		
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 		
-		UserModel user =repo.findByUserMail(request.getUsername()).orElseThrow();
+		UserModel user =repo.findByUserMail(request.getUsername()).orElseThrow(()->new NoResourceAvailableException("No User found for this email: "+requestDto.getUserMail()));
 		
 		String token = jwtService.generateToken(user);
 		

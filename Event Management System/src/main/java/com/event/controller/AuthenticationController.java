@@ -1,5 +1,6 @@
 package com.event.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,13 +20,13 @@ public class AuthenticationController
 	private AuthenticationService authService;
 
 	@PostMapping("/register")
-	public ResponseEntity<AuthResponseDto> register(@RequestBody UserRequestDto request)
+	public ResponseEntity<AuthResponseDto> register(@Valid @RequestBody UserRequestDto request)
 	{
 		return ResponseEntity.ok(authService.register(request));
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request)
+	public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody AuthRequestDto request)
 	{
 		return ResponseEntity.ok(authService.authenticate(request));
 	}
