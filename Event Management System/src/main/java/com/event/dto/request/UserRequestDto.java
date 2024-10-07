@@ -36,6 +36,6 @@ public class UserRequestDto
 
 	@NotNull(message = "Role can not be null")
 	@NotEmpty(message = "Role can not be empty")
-	@Pattern(regexp = "User|EventAdmin|VenueAdmin|USER|EVENTADMIN|VENUEADMIN", message = "Role must be one of these only User, EventAdmin, VenueAdmin, USER, EVENTADMIN, VENUEADMIN,")
+	@Pattern(regexp = "User|Admin|USER|ADMIN", message = "Role must be one of these only User, EventAdmin, VenueAdmin, USER, EVENTADMIN, VENUEADMIN,")
 	private String userRole;
 }

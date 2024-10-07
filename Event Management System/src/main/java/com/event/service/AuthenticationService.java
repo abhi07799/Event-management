@@ -1,7 +1,10 @@
 package com.event.service;
 
+import com.event.controller.AuthenticationController;
 import com.event.exception.NoResourceAvailableException;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +22,8 @@ import com.event.security.JwtAuthService;
 @Service
 public class AuthenticationService
 {
+	private final static Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+
 	@Autowired
 	private JwtAuthService jwtService;
 	
@@ -36,6 +41,7 @@ public class AuthenticationService
 	
 	public AuthResponseDto register(UserRequestDto requestDto)
 	{
+		logger.info("Registering new user and generating the token");
 		UserModel request = mapper.map(requestDto, UserModel.class);
 		
 		request.setUserPassword(passwordEncoder.encode(request.getUserPassword()));
@@ -49,6 +55,7 @@ public class AuthenticationService
 	
 	public AuthResponseDto authenticate(AuthRequestDto requestDto)
 	{
+		logger.info("Authenticating user credentials and generating the token");
 		UserModel request = mapper.map(requestDto, UserModel.class);
 		
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));

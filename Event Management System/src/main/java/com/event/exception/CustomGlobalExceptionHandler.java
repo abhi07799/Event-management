@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -44,9 +45,9 @@ public class CustomGlobalExceptionHandler
 
         List<ObjectError> errorObjects = ex.getBindingResult().getAllErrors();
 
-        for (int i = 0; i < errorObjects.size(); i++)
+        for (ObjectError errorObject : errorObjects)
         {
-            FieldError fieldError = (FieldError) errorObjects.get(i);
+            FieldError fieldError = (FieldError) errorObject;
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
@@ -80,5 +81,17 @@ public class CustomGlobalExceptionHandler
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorDto> handleAccessDeniedException(AccessDeniedException ex, WebRequest request)
+    {
+        String path = request.getDescription(true);
+
+        ErrorDto errorDto = ErrorDto.builder().timestamp(LocalDateTime.now()).message(ex.getMessage()).error(String.valueOf(ex.getCause())).path(path).exceptionStackTrace(ExceptionUtils.getStackTrace(ex)).build();
+
+        return new ResponseEntity<>(errorDto, HttpStatus.FORBIDDEN);
     }
 }
